@@ -1,6 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Plan2Gether
 
-## Getting Started
+# A group planning app which lets users create a board of various things they want to do.
 
 First, run the development server:
 
