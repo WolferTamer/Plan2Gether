@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { createBoard } from "./actions/board";
 
 export default function Home() {
   return (
@@ -16,10 +15,6 @@ export default function Home() {
             Make a Plan
           </Link>
         </div>
-        <form action={createBoard}>
-          <input type="text" name="title" id="title" />
-          <button type="submit">Thing</button>
-        </form>
       </main>
     </div>
   );

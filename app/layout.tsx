@@ -41,8 +41,11 @@ export default function RootLayout({
               height={256}
             />
 
-            <Link href="/">
+            <Link href="/" className="mr-5">
               <h1 className="text-xl font-bold">Plan2Gether</h1>
+            </Link>
+            <Link href="/boards">
+              <h2 className="text-md font-semibold">Boards</h2>
             </Link>
             <div className="ml-auto flex items-center justify-end gap-4">
               <Show when="signed-out">
@@ -58,7 +61,7 @@ export default function RootLayout({
               </Show>
             </div>
           </header>
-          <div className="bg-primary-900 p-5 min-h-full flex-1 w-full">
+          <div className="bg-stone-900 p-5 min-h-full flex-1 w-full">
             {children}
           </div>
         </ClerkProvider>
