@@ -4,7 +4,6 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
-  Optional,
 } from "sequelize";
 import sequelize from "../sequelize";
 
