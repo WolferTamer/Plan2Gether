@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { Board } from "../db";
+import { Board, User } from "../db";
 
 export async function createBoard(formData: FormData) {
   "use server";
@@ -30,7 +30,13 @@ export async function getBoard(id: number) {
   if (!isAuthenticated) return;
   const board = await Board.findOne({
     where: { owner: userId, id: id },
-    raw: true,
+    include: [
+      {
+        model: User,
+        as: "ownerObject",
+      },
+    ],
+    raw: false,
   });
   return board;
 }

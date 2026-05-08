@@ -13,7 +13,6 @@ class Board extends Model<
 > {
   declare id: CreationOptional<number>;
   declare title: string;
-  declare owner: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -21,7 +20,6 @@ class Board extends Model<
 Board.init(
   {
     title: { type: DataTypes.STRING, allowNull: false },
-    owner: { type: DataTypes.STRING, allowNull: false },
     id: {
       type: DataTypes.BIGINT,
       allowNull: false,
