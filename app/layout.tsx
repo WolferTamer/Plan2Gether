@@ -61,7 +61,7 @@ export default function RootLayout({
               </Show>
             </div>
           </header>
-          <div className="bg-stone-900 p-5 min-h-full flex-1 w-full">
+          <div className="bg-stone-900 p-5 min-h-full flex-1 w-full flex items-stretch *:flex-1">
             {children}
           </div>
         </ClerkProvider>

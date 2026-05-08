@@ -1,11 +1,14 @@
 import {
+  Association,
   CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
 } from "sequelize";
 import sequelize from "../sequelize";
+import Board from "./Board";
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare clerkId: string;
@@ -14,6 +17,11 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare displayname: CreationOptional<string>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+  /*declare boards: NonAttribute<Board[]>;
+
+  declare static associations: {
+    boards: Association<User, Board>;
+  };*/
 }
 
 User.init(
