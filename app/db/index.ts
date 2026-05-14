@@ -1,9 +1,12 @@
 import sequelize from "./sequelize";
 import {
   Association,
+  BelongsToManyAddAssociationMixin,
+  BelongsToSetAssociationMixin,
   CreationOptional,
   DataTypes,
   ForeignKey,
+  HasManyAddAssociationMixin,
   InferAttributes,
   InferCreationAttributes,
   Model,
@@ -21,10 +24,49 @@ class Board extends Model<
   declare updatedAt: CreationOptional<Date>;
   declare owner: ForeignKey<User["clerkId"]>;
   declare collaborators?: NonAttribute<User[]>;
+  declare pages?: NonAttribute<Page[]>;
+  declare addCollaborator: BelongsToManyAddAssociationMixin<User, string>;
+  declare addPage: HasManyAddAssociationMixin<Page, number>;
 
   declare static associations: {
     ownerObject: Association<User, Board>;
     mtm_collaborators: Association<Board, User>;
+    pages: Association<Board, Page>;
+  };
+}
+
+class Page extends Model<InferAttributes<Page>, InferCreationAttributes<Page>> {
+  declare id: CreationOptional<number>;
+  declare boardId: ForeignKey<Board["id"]>;
+  declare name: string;
+  declare board: NonAttribute<Board>;
+  declare plans?: NonAttribute<Plan[]>;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
+  declare setBoard: BelongsToSetAssociationMixin<Board, number>;
+  declare addPlan: HasManyAddAssociationMixin<Plan, number>;
+
+  declare static associations: {
+    board: Association<Page, Board>;
+    plans: Association<Page, Plan>;
+  };
+}
+
+class Plan extends Model<InferAttributes<Plan>, InferCreationAttributes<Plan>> {
+  declare id: CreationOptional<number>;
+  declare pageId: ForeignKey<Page["id"]>;
+  declare title: string;
+  declare description: string;
+  declare url?: string;
+  declare cost?: string;
+  declare time?: Date;
+  declare deleted: CreationOptional<boolean>;
+  declare page: NonAttribute<Page>;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
+
+  declare static associations: {
+    page: Association<Plan, Page>;
   };
 }
 
@@ -32,7 +74,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare clerkId: string;
   declare email: string;
   declare username: string;
-  declare displayname: CreationOptional<string>;
+  declare displayname?: CreationOptional<string>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare boards?: NonAttribute<Board[]>;
@@ -94,6 +136,79 @@ Board.init(
   },
 );
 
+Page.init(
+  {
+    id: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+    },
+  },
+  {
+    freezeTableName: true,
+    tableName: "page",
+    sequelize: sequelize,
+  },
+);
+
+Plan.init(
+  {
+    id: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    cost: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    time: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+    },
+  },
+  {
+    freezeTableName: true,
+    tableName: "plan",
+    sequelize: sequelize,
+  },
+);
+
 User.hasMany(Board, {
   sourceKey: "clerkId",
   foreignKey: "owner",
@@ -116,4 +231,24 @@ User.belongsToMany(Board, {
   as: "boards",
 });
 
-export { Board, sequelize, User };
+Board.hasMany(Page, {
+  foreignKey: "boardId",
+  as: "pages",
+});
+
+Page.belongsTo(Board, {
+  foreignKey: "boardId",
+  as: "board",
+});
+
+Page.hasMany(Plan, {
+  foreignKey: "pageId",
+  as: "plans",
+});
+
+Plan.belongsTo(Page, {
+  foreignKey: "pageId",
+  as: "page",
+});
+
+export { Board, sequelize, User, Page, Plan };
